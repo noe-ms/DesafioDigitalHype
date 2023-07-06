@@ -1,0 +1,160 @@
+     À*--------------------------------------------------------------------*
+     À* Programa........ CADENACOD                                         *
+     À*                  Analiza una cadena codificada                     *
+     À* Pantalla........                                                   *
+     À*                                                                    *
+     À* Elaborado por... No‚ Mel‚ndez S nchez           Fecha: 04/jul/2023 *
+     À* Modificado por..                                Fecha:   /   /     *
+     À*--------------------------------------------------------------------*
+     fCADENADSP CF   E             WorkStn ExtFile('BIBNOETEST/CADENADSP')
+     À*--------------------------------------------------------------------*
+     d Caracter        s              1    Inz('0')
+     d Idy             s              4  0
+     d Found           s              3  0
+     d PosIni          s              3  0
+     d PosFin          s              3  0
+     d Posicion        s              2  0
+     d ContadorCadena  s              2  0
+     d Ind             s              1    Inz(False)
+     d @FirstN         s             20    Inz('')
+     d @LastN          s             20    Inz('')
+     d @Id             s             20    Inz('')
+     d @TextFirstN     s             15    Inz('"first name":')
+     d @TextLastN      s             15    Inz('"last name":')
+     d @TextId         s             15    Inz('"id":')
+     À*---------------------------------------------------------------*
+     À* Valor por omisi¢n de indicadores generales
+     À*---------------------------------------------------------------*
+     d True            c                   *On
+     d False           c                   *Off
+     À*---------------------------------------------------------------*
+     À* Estructura de datos para mensajes al usuario
+     À*---------------------------------------------------------------*
+     d MsgData         ds
+     d                               50    Inz('Entrada no puede quedar en blan-
+     d                                     co.')
+     d                               50    Inz('Entrada no cumple con los datos-
+     d                                      requeridos.')
+     d MsgE                          50    Dim(2) OverLay(MsgData)
+     À*--------------------------------------------------------------------*
+      /free
+
+     À*---------------------------------------------------------------*
+     À*    AnalizaCadena: Separa cadena de entrada
+     À*---------------------------------------------------------------*
+           BegSR AnalizaCadena;
+
+              PosIni = 1;
+              PosFin = *Zeros;
+              Ind=False;
+              For Idy=1 by 1 to 3;
+                 If Idy=1;
+                    Found=%Scan(%Trim(Caracter):XCADENA);
+                 ElseIf Idy=2 or Idy=3;
+                    DoW Ind=False;
+                       Found=%Scan(
+                             %Trim(Caracter):
+                             %SubSt(XCADENA:PosIni:
+                             %Len(%Trim(XCADENA))-PosIni)
+                             );
+                       ContadorCadena = PosIni;
+                       If Found>0;
+                          Posicion = Found+PosFin;
+                          If Posicion>PosIni;
+                             Leave;
+                          Else;
+                             PosIni += 1;
+                          EndIf;
+                       Else;
+                          Ind=True;
+                       EndIf;
+                    EndDo;
+                 EndIf;
+                 If Found>0
+                    or Found=0 And Idy=3;
+                    If Idy=1;
+                       PosFin=Found-1;
+                       @FirstN = %Subst(XCADENA:PosIni:PosFin);
+                    ElseIf Idy=2;
+                       PosFin=Found-1;
+                       @LastN = %Subst(XCADENA:PosIni:PosFin);
+                    ElseIf Idy=3;
+                       PosFin=(%Len(%Trim(XCADENA))+1)-PosIni;
+                       @Id = %Subst(XCADENA:PosIni:PosFin);
+                    EndIf;
+                    PosIni+=Found;
+                 EndIf;
+              EndFor;
+
+           EndSR;
+
+     À*---------------------------------------------------------------*
+     À*    ValidaCadena: Validaci¢n de la cadena de entrada
+     À*---------------------------------------------------------------*
+           BegSR ValidaCadena;
+
+              PosIni = 1;
+              PosFin = *Zeros;
+              Ind=False;
+              For Idy=1 by 1 to 3;
+                 If Idy=1;
+                    Found=%Scan(%Trim(Caracter):XCADENA);
+                    If Found=0;
+                       XMsg = %Trim(MsgE(2));
+                       Leave;
+                    Else;
+                       PosIni+=Found;
+                    EndIf;
+                 ElseIf Idy=2 or Idy=3;
+            //      DoW Ind=False;
+            //         Found=%Scan(
+            //               %Trim(Caracter):
+            //               %SubSt(XCADENA:PosIni:
+            //               %Len(%Trim(XCADENA))-PosIni)
+            //               );
+            //         ContadorCadena = PosIni;
+            //         If Found>0;
+            //            Posicion = Found+PosFin;
+            //            If Posicion>PosIni;
+            //               Leave;
+            //            Else;
+            //               PosIni += 1;
+            //            EndIf;
+            //         Else;
+            //            Ind=True;
+            //         EndIf;
+            //      EndDo;
+                 EndIf;
+              EndFor;
+
+           EndSR;
+
+     À*---------------------------------------------------------------*
+     À*    *InzSR   Inicializaci¢n
+     À*---------------------------------------------------------------*
+           BegSR *InzSR;
+              Fila = 5;
+              Columna = 10;
+              DoW BTNCMD<>1;
+                 ExFmt WINDOW;
+                 XMsg = *Blanks;
+                 Select;
+                    When BTNCMD=1;
+                       *InLR = True;
+                    Other;
+                       If XCADENA=*Blanks;
+                          XMsg = %Trim(MsgE(1));
+                       Else;
+                          ExSR ValidaCadena;
+                          If XMsg = *Blanks;
+                             ExSR AnalizaCadena;
+                             XRESUL1=%Trim(@TextFirstN)+'"'+%Trim(@FirstN)+'"';
+                             XRESUL2=%Trim(@TextLastN)+'"'+%Trim(@LastN)+'"';
+                             XRESUL3=%Trim(@TextId)+'"'+%Trim(@Id)+'"';
+                          EndIf;
+                       EndIf;
+                 EndSl;
+              EndDo;
+           EndSR;
+      /end-free
+

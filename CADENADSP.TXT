@@ -1,0 +1,48 @@
+     A*%%TS  SD  20230706  111912  WPGMRZ      REL-V7R4M0  5770-WDS
+     A*%%EC
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      INDARA
+     A                                      CF03(03 'Salir')
+     A          R WINDOW
+     A*%%TS  SD  20230706  111912  WPGMRZ      REL-V7R4M0  5770-WDS
+     A                                      WINDOW(&FILA &COLUMNA 12 53 *NOMSGL-
+     A                                      IN *NORSTCSR)
+     A                                      CA11(11)
+     A                                      RTNCSRLOC(*MOUSE &FIL1 &COL1 &FIL2 -
+     A                                      &COL2)
+     A                                      INVITE
+     A                                      OVERLAY
+     A                                      WDWBORDER((*COLOR TRQ) (*DSPATR RI)-
+     A                                       (*CHAR '        '))
+     A  11                                  RMVWDW
+     A                                      WDWTITLE((*TEXT ' Test de DigitalHy-
+     A                                      pe '))
+     A                                      WDWTITLE((*TEXT ' CADENACOD ') *RI-
+     A                                      GHT *BOTTOM)
+     A                                      MOUBTN(*ULP CA11)
+     A            FILA           2S 0P
+     A            COLUMNA        3S 0P
+     A            FIL1           3S 0H
+     A            COL1           3S 0H
+     A            FIL2           3S 0H
+     A            COL2           3S 0H
+     A                                  2 13' Analiza una cadena codificada'
+     A                                      DSPATR(RI)
+     A                                  4  2'Entrada:'
+     A            XCADENA       40A  B  4 13COLOR(YLW)
+     A                                      CHECK(LC)
+     A                                  6  2'Resultado:'
+     A            XRESUL1       40A  O  6 13COLOR(YLW)
+     A            BTNCMD         2Y 0B 10  1PSHBTNFLD
+     A                                      PSHBTNCHC(1 '>Cerrar' CF03)
+     A                                      PSHBTNCHC(2 '>Analizar')
+     A            XMSG          50A  O 12  1DSPATR(HI)
+     A            XRESUL2       40A  O  7 13COLOR(YLW)
+     A            XRESUL3       40A  O  8 13COLOR(YLW)
+     A          R DUMMY
+     A*%%TS  SD  20111221  152639  WPGMRZ      REL-V5R4M0  5722-WDS
+     A*                                     KEEP
+     A                                      ASSUME
+     A*                                     OVERLAY
+     A                                  1  3' '
+
