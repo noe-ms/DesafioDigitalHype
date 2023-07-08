@@ -106,24 +106,6 @@
                        PosIni+=Found;
                     EndIf;
                  ElseIf Idy=2 or Idy=3;
-            //      DoW Ind=False;
-            //         Found=%Scan(
-            //               %Trim(Caracter):
-            //               %SubSt(XCADENA:PosIni:
-            //               %Len(%Trim(XCADENA))-PosIni)
-            //               );
-            //         ContadorCadena = PosIni;
-            //         If Found>0;
-            //            Posicion = Found+PosFin;
-            //            If Posicion>PosIni;
-            //               Leave;
-            //            Else;
-            //               PosIni += 1;
-            //            EndIf;
-            //         Else;
-            //            Ind=True;
-            //         EndIf;
-            //      EndDo;
                  EndIf;
               EndFor;
 
